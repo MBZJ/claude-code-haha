@@ -6,6 +6,10 @@ import { diffLines } from 'diff'
 import type { MessageEntry } from './sessionService.js'
 import type { FileHistorySnapshot } from '../../utils/fileHistory.js'
 import { getClaudeConfigHomeDir } from '../../utils/envUtils.js'
+import {
+  isSameOrInsidePathForPlatform,
+  normalizeDriveRootPathForPlatform,
+} from './windowsDrivePath.js'
 
 const MAX_PREVIEW_BYTES = 1024 * 1024
 const MAX_UNTRACKED_STAT_BYTES = 256 * 1024
@@ -1004,7 +1008,7 @@ export class WorkspaceService {
     if (!workDir) {
       throw new Error(`Session not found: ${sessionId}`)
     }
-    return path.resolve(workDir)
+    return path.resolve(normalizeDriveRootPathForPlatform(workDir))
   }
 
   private async getWorkspaceRoot(
@@ -1149,14 +1153,7 @@ export class WorkspaceService {
   }
 
   private isWithinRoot(targetPath: string, rootPath: string): boolean {
-    const target = this.normalizeComparableAbsolutePath(targetPath)
-    const root = this.normalizeComparableAbsolutePath(rootPath)
-    return target === root || target.startsWith(`${root}${path.sep}`)
-  }
-
-  private normalizeComparableAbsolutePath(filePath: string): string {
-    const resolved = path.resolve(filePath)
-    return process.platform === 'win32' ? resolved.toLowerCase() : resolved
+    return isSameOrInsidePathForPlatform(targetPath, rootPath)
   }
 
   private normalizeRelativePath(filePath: string): string {

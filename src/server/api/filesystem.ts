@@ -13,6 +13,10 @@ import { findGitRoot, gitExe } from '../../utils/git.js'
 import { ripGrep } from '../../utils/ripgrep.js'
 import { getInitialSettings } from '../../utils/settings/settings.js'
 import { isWithinRegisteredFilesystemRoot } from '../services/filesystemAccessRoots.js'
+import {
+  isSameOrInsidePathForPlatform,
+  normalizeDriveRootPathForPlatform,
+} from '../services/windowsDrivePath.js'
 
 type FilesystemEntry = {
   name: string
@@ -41,14 +45,7 @@ const IMAGE_MIME_TYPES: Record<string, string> = {
 }
 
 function isWithinRoot(targetPath: string, rootPath: string): boolean {
-  const target = normalizeComparablePath(targetPath)
-  const root = normalizeComparablePath(rootPath)
-  return target === root || target.startsWith(`${root}${path.sep}`)
-}
-
-function normalizeComparablePath(filePath: string): string {
-  const resolved = path.resolve(filePath)
-  return process.platform === 'win32' ? resolved.toLowerCase() : resolved
+  return isSameOrInsidePathForPlatform(targetPath, rootPath)
 }
 
 function isVcsMetadataDirectoryName(name: string): boolean {
@@ -56,7 +53,7 @@ function isVcsMetadataDirectoryName(name: string): boolean {
 }
 
 function isAllowedFilesystemPath(targetPath: string): boolean {
-  const resolvedPath = path.resolve(targetPath)
+  const resolvedPath = path.resolve(normalizeDriveRootPathForPlatform(targetPath))
   const homeDir = path.resolve(os.homedir())
 
   if (isWithinRoot(resolvedPath, homeDir) || isWithinRoot(resolvedPath, '/tmp')) {
@@ -93,7 +90,7 @@ async function handleServeFile(url: URL): Promise<Response> {
     return json({ error: 'Missing path parameter' }, 400)
   }
 
-  const resolvedPath = path.resolve(filePath)
+  const resolvedPath = path.resolve(normalizeDriveRootPathForPlatform(filePath))
 
   if (!isAllowedFilesystemPath(resolvedPath)) {
     return json({ error: 'Access denied: path outside allowed directory' }, 403)
@@ -132,7 +129,7 @@ async function handleServeFile(url: URL): Promise<Response> {
 
 async function handleBrowse(url: URL): Promise<Response> {
   const targetPath = url.searchParams.get('path') || os.homedir() || '/'
-  const resolvedPath = path.resolve(targetPath)
+  const resolvedPath = path.resolve(normalizeDriveRootPathForPlatform(targetPath))
 
   if (!isAllowedFilesystemPath(resolvedPath)) {
     return json({ error: 'Access denied: path outside allowed directory' }, 403)
