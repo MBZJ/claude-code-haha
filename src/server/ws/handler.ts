@@ -1070,6 +1070,9 @@ export function translateCliMessage(cliMsg: any, sessionId: string): ServerMessa
           type: 'error',
           message,
           code,
+          ...(typeof cliMsg.businessErrorCode === 'string'
+            ? { businessErrorCode: cliMsg.businessErrorCode }
+            : {}),
         }]
       }
 

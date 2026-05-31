@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'bun:test'
+import { BUSINESS_ERROR_CODES } from '../../constants/businessErrors.js'
 import {
   getAssistantMessageFromError,
   getImageUnsupportedErrorMessage,
@@ -29,6 +30,7 @@ describe('image unsupported API errors', () => {
     )
 
     expect(msg.isApiErrorMessage).toBe(true)
+    expect(msg.businessErrorCode).toBe(BUSINESS_ERROR_CODES.IMAGE_UNSUPPORTED)
     expect(msg.errorDetails).toBe('This model does not support image blocks')
     expect(msg.message.content[0]).toMatchObject({
       type: 'text',

@@ -3637,4 +3637,35 @@ describe('MessageList nested tool calls', () => {
       ),
     ).toBeTruthy()
   })
+
+  it('renders business API errors in the active locale without raw English fallback', () => {
+    useSettingsStore.setState({ locale: 'zh' })
+    useChatStore.setState({
+      sessions: {
+        [ACTIVE_TAB]: makeSessionState({
+          messages: [
+            {
+              id: 'error-1',
+              type: 'error',
+              code: 'invalid_request',
+              businessErrorCode: 'image_unsupported',
+              message:
+                'This model does not support images. Continue with text, or switch to a vision-capable model and send the image again.',
+              timestamp: 1,
+            },
+          ],
+        }),
+      },
+    })
+
+    render(<MessageList />)
+
+    expect(screen.getByText('错误:')).toBeTruthy()
+    expect(
+      screen.getByText(
+        '当前模型不支持图片。请继续使用文字，或切换到支持视觉的模型后重新发送图片。',
+      ),
+    ).toBeTruthy()
+    expect(screen.queryByText(/This model does not support images/)).toBeNull()
+  })
 })

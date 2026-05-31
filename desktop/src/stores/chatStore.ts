@@ -1649,7 +1649,17 @@ export const useChatStore = create<ChatStore>((set, get) => ({
             newMessages = appendAssistantTextMessage(newMessages, pendingText, Date.now())
           }
           newMessages = dropTailCompactingCompactSummary(newMessages)
-          newMessages = [...newMessages, { id: nextId(), type: 'error', message: msg.message, code: msg.code, timestamp: Date.now() }]
+          newMessages = [
+            ...newMessages,
+            {
+              id: nextId(),
+              type: 'error',
+              message: msg.message,
+              code: msg.code,
+              ...(msg.businessErrorCode ? { businessErrorCode: msg.businessErrorCode } : {}),
+              timestamp: Date.now(),
+            },
+          ]
           return {
             messages: newMessages,
             chatState: 'idle',

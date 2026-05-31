@@ -2411,6 +2411,32 @@ describe('chatStore history mapping', () => {
     expect(updateTabStatusMock).toHaveBeenLastCalledWith(TEST_SESSION_ID, 'error')
   })
 
+  it('preserves business error codes from server error messages', () => {
+    useChatStore.setState({
+      sessions: {
+        [TEST_SESSION_ID]: makeSession({
+          messages: [],
+          chatState: 'streaming',
+        }),
+      },
+    })
+
+    useChatStore.getState().handleServerMessage(TEST_SESSION_ID, {
+      type: 'error',
+      message: 'This model does not support images.',
+      code: 'invalid_request',
+      businessErrorCode: 'image_unsupported',
+    })
+
+    const session = useChatStore.getState().sessions[TEST_SESSION_ID]
+    expect(session?.messages[session.messages.length - 1]).toMatchObject({
+      type: 'error',
+      message: 'This model does not support images.',
+      code: 'invalid_request',
+      businessErrorCode: 'image_unsupported',
+    })
+  })
+
   it('removes the transient compacting card when compacting status ends without a boundary', () => {
     useChatStore.setState({
       sessions: {

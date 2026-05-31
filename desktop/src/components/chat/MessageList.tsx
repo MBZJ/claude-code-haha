@@ -2015,16 +2015,26 @@ export const MessageBlock = memo(function MessageBlock({
         />
       )
     case 'error': {
+      const businessErrorKey = message.businessErrorCode
+        ? `businessError.${message.businessErrorCode}` as TranslationKey
+        : null
+      const businessErrorText = businessErrorKey ? t(businessErrorKey) : null
       const errorKey = message.code ? `error.${message.code}` as TranslationKey : null
       const errorText = errorKey ? t(errorKey) : null
-      const displayMessage = (errorText && errorText !== errorKey) ? errorText : message.message
+      const displayMessage =
+        businessErrorText && businessErrorText !== businessErrorKey
+          ? businessErrorText
+          : (errorText && errorText !== errorKey)
+            ? errorText
+            : message.message
       const showRawDetail =
+        !message.businessErrorCode &&
         Boolean(message.message) &&
         message.message.trim() !== '' &&
         message.message !== displayMessage
       return (
         <div className="mb-3 px-4 py-2.5 rounded-lg border border-[var(--color-error)]/20 bg-[var(--color-error-container)]/28 text-sm text-[var(--color-error)]">
-          <strong>Error:</strong> {displayMessage}
+          <strong>{t('common.error')}:</strong> {displayMessage}
           {showRawDetail && (
             <div className="mt-1 whitespace-pre-wrap text-xs text-[var(--color-on-error-container)]/85">
               {message.message}

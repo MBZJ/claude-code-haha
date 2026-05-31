@@ -14,6 +14,7 @@ export const en = {
   'common.enable': 'Enable',
   'common.disable': 'Disable',
   'common.active': 'ACTIVE',
+  'common.error': 'Error',
   'common.copyFailed': 'Copy failed.',
 
   // ─── Sidebar ──────────────────────────────────────
@@ -1626,6 +1627,16 @@ export const en = {
   'error.BAD_REQUEST': 'Bad request.',
   'error.NOT_FOUND': 'Resource not found.',
   'error.INTERNAL_ERROR': 'Internal server error.',
+
+  // ─── Business Errors ──────────────────────────────────────
+  'businessError.pdf_too_large': 'The PDF is too large for the selected model. Convert it to text or use a smaller PDF.',
+  'businessError.pdf_password_protected': 'The PDF is password protected. Unlock or convert it before sending it again.',
+  'businessError.pdf_invalid': 'The PDF file is not valid. Convert it to text or send a different file.',
+  'businessError.image_too_large': 'The image is too large for the selected model. Resize it or send a smaller image.',
+  'businessError.image_unsupported': 'This model does not support images. Continue with text, or switch to a vision-capable model and send the image again.',
+  'businessError.request_too_large': 'The request is too large for the selected model. Remove large files or retry with a smaller message.',
+  'businessError.prompt_too_long': 'The prompt is too long for the selected model. Compact the conversation or retry with less context.',
+  'businessError.auto_mode_unavailable': 'Auto mode is unavailable for your current plan.',
 
   // ─── Server Status Verbs ──────────────────────────────────────
   'serverVerb.Thinking': 'Thinking',

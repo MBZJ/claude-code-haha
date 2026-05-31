@@ -16,6 +16,7 @@ export const zh: Record<TranslationKey, string> = {
   'common.enable': '启用',
   'common.disable': '禁用',
   'common.active': '已激活',
+  'common.error': '错误',
   'common.copyFailed': '复制失败。',
 
   // ─── Sidebar ──────────────────────────────────────
@@ -1628,6 +1629,16 @@ export const zh: Record<TranslationKey, string> = {
   'error.BAD_REQUEST': '请求无效。',
   'error.NOT_FOUND': '资源未找到。',
   'error.INTERNAL_ERROR': '内部服务器错误。',
+
+  // ─── 业务错误 ──────────────────────────────────────
+  'businessError.pdf_too_large': '这个 PDF 超出了当前模型可处理的大小。请先转成文本，或换一个更小的 PDF。',
+  'businessError.pdf_password_protected': '这个 PDF 有密码保护。请先解锁或转换后再发送。',
+  'businessError.pdf_invalid': '这个 PDF 文件无效。请先转成文本，或换一个文件发送。',
+  'businessError.image_too_large': '这张图片超出了当前模型可处理的大小。请压缩图片，或换一张更小的图片。',
+  'businessError.image_unsupported': '当前模型不支持图片。请继续使用文字，或切换到支持视觉的模型后重新发送图片。',
+  'businessError.request_too_large': '这次请求超出了当前模型可处理的大小。请移除大文件，或缩短消息后重试。',
+  'businessError.prompt_too_long': '当前上下文超出了模型限制。请先压缩会话，或减少上下文后重试。',
+  'businessError.auto_mode_unavailable': '当前套餐不支持自动模式。',
 
   // ─── Server Status Verbs ──────────────────────────────────────
   'serverVerb.Thinking': '思考中',
